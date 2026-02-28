@@ -101,6 +101,7 @@ export function NewtSiteInstallCommands({
                 `helm install newt fossorial/newt \\
     --create-namespace \\
     --set newtInstances[0].name="main-tunnel" \\
+    --set newtInstances[0].enabled=true \\
     --set-string newtInstances[0].auth.keys.endpointKey="${endpoint}" \\
     --set-string newtInstances[0].auth.keys.idKey="${id}" \\
     --set-string newtInstances[0].auth.keys.secretKey="${secret}"`
@@ -185,59 +186,68 @@ WantedBy=default.target`
                     className="mt-4"
                 />
 
-                    <div className="pt-4">
-                        <p className="font-bold mb-3">
-                            {t("siteConfiguration")}
-                        </p>
-                        <div className="flex items-center space-x-2 mb-2">
-                            <CheckboxWithLabel
-                                id="acceptClients"
-                                aria-describedby="acceptClients-desc"
-                                checked={acceptClients}
-                                onCheckedChange={(checked) => {
-                                    const value = checked as boolean;
-                                    setAcceptClients(value);
-                                }}
-                                label={t("siteAcceptClientConnections")}
-                            />
-                        </div>
-                        <p
-                            id="acceptClients-desc"
-                            className="text-sm text-muted-foreground"
+                <div className="pt-4">
+                    <p className="font-bold mb-3">{t("siteConfiguration")}</p>
+                    <div className="flex items-center space-x-2 mb-2">
+                        <CheckboxWithLabel
+                            id="acceptClients"
+                            aria-describedby="acceptClients-desc"
+                            checked={acceptClients}
+                            onCheckedChange={(checked) => {
+                                const value = checked as boolean;
+                                setAcceptClients(value);
+                            }}
+                            label={t("siteAcceptClientConnections")}
+                        />
+                    </div>
+                    <p
+                        id="acceptClients-desc"
+                        className="text-sm text-muted-foreground"
+                    >
+                        {t("siteAcceptClientConnectionsDescription")}
+                    </p>
+                </div>
+
+                <div className="pt-4">
+                    <p className="font-bold mb-3">{t("commands")}</p>
+                    <p className="text-sm text-muted-foreground mb-3">
+                        For more and up to date Kubernetes installation
+                        information, see{" "}
+                        <a
+                            href="https://docs.pangolin.net/manage/sites/install-kubernetes"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="underline"
                         >
-                            {t("siteAcceptClientConnectionsDescription")}
-                        </p>
-                    </div>
+                            docs.pangolin.net/manage/sites/install-kubernetes
+                        </a>
+                        .
+                    </p>
+                    <div className="mt-2 space-y-3">
+                        {commands.map((item, index) => {
+                            const commandText =
+                                typeof item === "string" ? item : item.command;
+                            const title =
+                                typeof item === "string"
+                                    ? undefined
+                                    : item.title;
 
-                    <div className="pt-4">
-                        <p className="font-bold mb-3">{t("commands")}</p>
-                        <div className="mt-2 space-y-3">
-                            {commands.map((item, index) => {
-                                const commandText =
-                                    typeof item === "string"
-                                        ? item
-                                        : item.command;
-                                const title =
-                                    typeof item === "string"
-                                        ? undefined
-                                        : item.title;
-
-                                return (
-                                    <div key={index}>
-                                        {title && (
-                                            <p className="text-sm font-medium mb-1.5">
-                                                {title}
-                                            </p>
-                                        )}
-                                        <CopyTextBox
-                                            text={commandText}
-                                            outline={true}
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </div>
+                            return (
+                                <div key={index}>
+                                    {title && (
+                                        <p className="text-sm font-medium mb-1.5">
+                                            {title}
+                                        </p>
+                                    )}
+                                    <CopyTextBox
+                                        text={commandText}
+                                        outline={true}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
+                </div>
             </SettingsSectionBody>
         </SettingsSection>
     );
