@@ -210,19 +210,21 @@ WantedBy=default.target`
 
                 <div className="pt-4">
                     <p className="font-bold mb-3">{t("commands")}</p>
-                    <p className="text-sm text-muted-foreground mb-3">
-                        For more and up to date Kubernetes installation
-                        information, see{" "}
-                        <a
-                            href="https://docs.pangolin.net/manage/sites/install-kubernetes"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="underline"
-                        >
-                            docs.pangolin.net/manage/sites/install-kubernetes
-                        </a>
-                        .
-                    </p>
+                    {platform === "kubernetes" && (
+                        <p className="text-sm text-muted-foreground mb-3">
+                            For more and up to date Kubernetes installation
+                            information, see{" "}
+                            <a
+                                href="https://docs.pangolin.net/manage/sites/install-kubernetes"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline"
+                            >
+                                docs.pangolin.net/manage/sites/install-kubernetes
+                            </a>
+                            .
+                        </p>
+                    )}
                     <div className="mt-2 space-y-3">
                         {commands.map((item, index) => {
                             const commandText =
@@ -232,8 +234,10 @@ WantedBy=default.target`
                                     ? undefined
                                     : item.title;
 
+                            const key = `${title ?? ""}::${commandText}`;
+
                             return (
-                                <div key={index}>
+                                <div key={key}>
                                     {title && (
                                         <p className="text-sm font-medium mb-1.5">
                                             {title}
